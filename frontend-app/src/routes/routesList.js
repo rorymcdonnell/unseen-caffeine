@@ -20,10 +20,16 @@ import SubscriptionListScreen from "../screens/SubscriptionList";
 import CoffeeProducts from "../screens/CoffeeProducts";
 import MerchandiseProducts from "../screens/MerchandiseProducts";
 import SubscriptionItem from "../screens/SubscriptionItem";
+import EmailConfirmation from "../screens/EmailConfirmation";
 
 const routeTypes = { public: "public", private: "private" };
 
 export const routesList = [
+  {
+    path: "/confirm-email/:token",
+    component: EmailConfirmation,
+    routeType: routeTypes.public,
+  },
   {
     path: "/register",
     component: RegisterScreen,

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import moment from "moment";
 import { Table, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../components/Loader";
@@ -55,54 +56,83 @@ const SubscriptionListScreen = ({ history }) => {
       {loading ? (
         <Loader />
       ) : (
-        <Table striped bordered hover responsive className="table-sm">
+        <Table bordered responsive className="table-sm">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>PRODUCT</th>
-              <th>USER</th>
-              <th>DATE</th>
-              <th>TOTAL</th>
-              <th>PAID</th>
-              <th>DELIVERED</th>
-              <th>DETAILS</th>
               <th></th>
+              <th>Name</th>
+              <th>Size</th>
+              <th>Blend Type</th>
+              <th>Packs</th>
+              <th>Next Invoice</th>
+              <th>Price</th>
+              <th>Amount</th>
+              <th className="text-center">Pause</th>
+              <th colSpan={2} className="text-center">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
-            {subscriptions?.map((order) => (
-              <tr key={order._id}>
-                <td>{order._id}</td>
-                <td>{order.subscriptionItem?.stripeProductName}</td>
-                <td>{order.user && order.user.name}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
-                <td>£{order.subscriptionItem?.stripeProductPrice}</td>
+            {subscriptions?.map((item) => (
+              <tr key={item._id}>
                 <td>
-                  {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
-                  ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
+                  <img
+                    src={item?.subscriptionItem?.stripeProductImageUrl}
+                    alt="product image"
+                    width={50}
+                  />
+                </td>
+                <td>{item?.subscriptionItem?.stripeProductName}</td>
+                <td>
+                  {item?.subscriptionItem?.stripeSubscription?.plan?.nickname}
                 </td>
                 <td>
-                  {order.isDelivered ? (
-                    order.deliveredAt.substring(0, 10)
-                  ) : (
-                    <i className="fas fa-times" style={{ color: "red" }}></i>
-                  )}
+                  {
+                    item?.subscriptionItem?.stripeSubscription?.metadata
+                      ?.blendType
+                  }
+                </td>
+                <td>{item?.subscriptionItem?.stripeSubscription?.quantity}</td>
+                <td>
+                  {moment(
+                    item?.subscriptionItem?.stripeSubscription
+                      ?.billing_cycle_anchor * 1000
+                  )
+                    .add(1, "months")
+                    .format("DD-MM-YYYY")}
                 </td>
                 <td>
+                  £
+                  {item?.subscriptionItem?.stripeSubscription?.plan?.amount /
+                    100}
+                </td>
+                <td>
+                  £{" "}
+                  {(item?.subscriptionItem?.stripeSubscription?.plan?.amount /
+                    100) *
+                    item?.subscriptionItem?.stripeSubscription?.quantity}
+                </td>
+                <td className="text-center">{item?.isPause ? "Yes" : "No"}</td>
+                <td className="text-center">
                   <Button
                     variant="light"
                     className="btn-sm"
                     onClick={() =>
                       handleClose(
-                        order.subscriptionItem?.stripeSubscriptionId,
-                        order._id
+                        item?.subscriptionItem?.stripeSubscriptionId,
+                        item?._id
                       )
                     }
                   >
                     Cancel
+                  </Button>
+                  <Button
+                    variant="light"
+                    className="btn-sm ml-1"
+                    onClick={() => history.push(`/subscription/${item._id}`)}
+                  >
+                    Update
                   </Button>
                 </td>
               </tr>

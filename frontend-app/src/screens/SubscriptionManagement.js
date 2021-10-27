@@ -164,8 +164,8 @@ const SubscriptionManagement = () => {
                 <td>{item?.subscriptionItem?.stripeSubscription?.quantity}</td>
                 <td>
                   {moment(
-                    item?.subscriptionItem?.stripeSubscription?.start_date *
-                      1000
+                    item?.subscriptionItem?.stripeSubscription
+                      ?.billing_cycle_anchor * 1000
                   )
                     .add(1, "months")
                     .format("DD-MM-YYYY")}

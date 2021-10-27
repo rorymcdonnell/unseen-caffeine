@@ -19,6 +19,7 @@ import {
   userListReducer,
   userDeleteReducer,
   userUpdateReducer,
+  confirmEmailReducer,
 } from "./reducers/userReducers";
 import {
   orderCreateReducer,
@@ -71,6 +72,7 @@ const reducer = combineReducers({
   openUpdateSubscriptionModal: openUpdateSubscriptionModalReducer,
   updateUserSubscription: updateUserSubscriptionReducer,
   getSubscriptionItem: getSubscriptionByIdReducer,
+  emailConfirmation: confirmEmailReducer,
 });
 
 const cartItemsFromStorage = localStorage.getItem("cartItems")

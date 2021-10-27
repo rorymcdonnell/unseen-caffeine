@@ -8,6 +8,7 @@ import {
 } from "../actions/subscriptionActions";
 import { Button, Row, Col } from "react-bootstrap";
 import "../subscription.css";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 const blendTypes = [
   { id: 1, name: "Espresso" },
@@ -19,6 +20,9 @@ const blendTypes = [
 const SubscriptionItem = () => {
   const params = useParams();
   const dispatch = useDispatch();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [billingAnchor, setBillingAnchor] = useState(false);
 
   const [blendType, setBlendType] = useState("Wholebean");
   const [quantity, setQuantity] = useState(0);
@@ -80,12 +84,15 @@ const SubscriptionItem = () => {
       )
     );
   };
+
+  const toggleModal = (billingAnchor) => {
+    setIsModalOpen(!isModalOpen);
+    setBillingAnchor(billingAnchor);
+  };
+
   return (
     <div className="bg-white">
       <div className="sub-management-container">
-        {updateSuccessMessage && (
-          <div className="alert alert-success">{updateSuccessMessage}</div>
-        )}
         <Row>
           <Col className="sub-management-col">
             <p
@@ -99,8 +106,8 @@ const SubscriptionItem = () => {
             <p style={{ color: "black" }}>
               {" "}
               {moment(
-                subscription?.subscriptionItem?.stripeSubscription?.start_date *
-                  1000
+                subscription?.subscriptionItem?.stripeSubscription
+                  ?.billing_cycle_anchor * 1000
               )
                 .add(1, "months")
                 .format("DD-MM-YYYY")}
@@ -119,7 +126,8 @@ const SubscriptionItem = () => {
               style={{ background: updating && "#333" }}
               className="gold-sub-btn"
               disabled={updating}
-              onClick={() => handleSubmit("now")}
+              // onClick={() => handleSubmit("now")}
+              onClick={() => toggleModal("now")}
             >
               SEND IT NOW
             </button>
@@ -138,7 +146,8 @@ const SubscriptionItem = () => {
               style={{ background: updating && "#333" }}
               className="gold-sub-btn"
               disabled={updating}
-              onClick={() => handleSubmit("pause")}
+              onClick={() => toggleModal("pause")}
+              // onClick={() => handleSubmit("pause")}
             >
               PAUSE IT
             </button>
@@ -231,7 +240,7 @@ const SubscriptionItem = () => {
             <button
               style={{ background: updating && "#333" }}
               className="gold-sub-btn"
-              onClick={() => handleSubmit("unchanged")}
+              onClick={() => toggleModal("unchanged")}
               disabled={updating}
             >
               UPDATE
@@ -254,6 +263,15 @@ const SubscriptionItem = () => {
           </Col>
         </Row>
       </div>
+
+      <ConfirmationModal
+        loading={loading}
+        isShow={isModalOpen}
+        handleClose={toggleModal}
+        handleSubmit={handleSubmit}
+        billingAnchor={billingAnchor}
+        message={updateSuccessMessage}
+      />
     </div>
   );
 };

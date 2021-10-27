@@ -17,11 +17,19 @@ const App = () => {
           {routesList?.map((route, index) =>
             route?.routeType === routeTypes.public ? (
               <Switch>
-                <Route exact path={route.path} component={route.component} />
+                <Route
+                  exact={true}
+                  path={route.path}
+                  component={route.component}
+                />
               </Switch>
             ) : (
               <Switch>
-                <PrivateRoute path={route.path} component={route.component} />
+                <PrivateRoute
+                  exact={true}
+                  path={route.path}
+                  component={route.component}
+                />
               </Switch>
             )
           )}
