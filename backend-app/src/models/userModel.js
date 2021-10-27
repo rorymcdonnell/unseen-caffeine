@@ -21,6 +21,15 @@ const userSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    isActive: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    confirmationToken: {
+      type: String,
+      required: false,
+    },
     stripeCustomerId: {
       type: String,
       required: false,

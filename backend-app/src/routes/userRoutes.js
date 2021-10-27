@@ -9,6 +9,7 @@ import {
   deleteUser,
   getUserById,
   updateUser,
+  emailConfirmation,
 } from "../controllers/userController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
@@ -24,4 +25,5 @@ router
   .get(protect, getUserById)
   .put(protect, admin, updateUser);
 
+router.route("/emailConfirmation/:token").get(emailConfirmation);
 export default router;
