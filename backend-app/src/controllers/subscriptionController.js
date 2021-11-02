@@ -62,6 +62,7 @@ const createUserSubscription = asyncHandler(async (req, res) => {
     if (isPreviousCard && customerId) {
       const subscription = await stripe.subscriptions.create({
         customer: customerId,
+        metadata: { blendType: req.body.blendType },
         items: [
           {
             price: subscriptionItem.stripePriceId,
@@ -99,6 +100,7 @@ const createUserSubscription = asyncHandler(async (req, res) => {
       if (customer) {
         const subscription = await stripe.subscriptions.create({
           customer: customer.id,
+          metadata: { blendType: req.body.blendType },
           items: [
             {
               price: subscriptionItem.stripePriceId,
@@ -129,11 +131,11 @@ const createUserSubscription = asyncHandler(async (req, res) => {
           });
           if (isSaveForLater) {
             const userCardDetails = {
-              card_id: card.id,
+              card_id: customer.default_source,
               customer_id: customer.id,
-              brand: card.brand,
-              last4: card.last4,
-              expiry: `${card.exp_month}/${card.exp_year}`,
+              brand: req.body.card.brand,
+              last4: req.body.card.last4,
+              expiry: req.body.card.expiry,
             };
             user.savedCards.push(userCardDetails);
           }
@@ -186,6 +188,15 @@ const updateSubscription = asyncHandler(async (req, res) => {
     req.body.isPause = true;
   }
 
+  if (req.body.billingCycleAnchor === "unpause") {
+    req.body.billingCycleAnchor = "unchanged";
+    req.body.pause_collection = {
+      behavior: "",
+    };
+    req.body.isPause = false;
+  }
+
+  console.log(req.body);
   try {
     const subscription = await stripe.subscriptions.update(req.params.id, {
       items: req.body.items,

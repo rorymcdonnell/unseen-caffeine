@@ -24,6 +24,7 @@ import {
   GET_SUBSCRIPTION_ITEM_BY_ID,
   GET_SUBSCRIPTION_ITEM_BY_ID_SUCCESS,
   GET_SUBSCRIPTION_ITEM_BY_ID_FAILED,
+  SUBSCRIPTION_CREATE_RESET,
 } from "../constants/subscriptionConstants";
 
 const initialState = {
@@ -106,6 +107,14 @@ export const createUserSubscriptionReducer = (state = initialState, action) => {
       };
     case CREATE_USER_SUBSCRIPTION_FAILED:
       return { ...state, loading: false, error: action.payload };
+    case SUBSCRIPTION_CREATE_RESET:
+      return {
+        ...state,
+        loading: false,
+        error: "",
+        loaded: false,
+        message: "",
+      };
     default:
       return state;
   }

@@ -8,6 +8,7 @@ import {
   createUserSubscription,
   openSubscriptionModal,
 } from "../actions/subscriptionActions";
+import { SUBSCRIPTION_CREATE_RESET } from "../constants/subscriptionConstants";
 
 const SubscriptionCheckoutScreen = ({ history }) => {
   const { product } = history?.location?.state;
@@ -39,12 +40,15 @@ const SubscriptionCheckoutScreen = ({ history }) => {
   const createSubscription = useSelector((state) => state.createSubscription);
   const { loading, loaded } = createSubscription;
 
+  const blendType = JSON.parse(localStorage.getItem("blendType"));
+
   useEffect(() => {
     if (loaded) {
       history.push(`/profile/my-subscriptions`);
       dispatch(openSubscriptionModal(false));
       dispatch({ type: USER_DETAILS_RESET });
       dispatch({ type: ORDER_CREATE_RESET });
+      dispatch({ type: SUBSCRIPTION_CREATE_RESET });
     }
     // eslint-disable-next-line
   }, [history, loaded]);
@@ -76,7 +80,14 @@ const SubscriptionCheckoutScreen = ({ history }) => {
       paymentMethod: cart.paymentMethod.brand,
       shippingPrice: 3.0,
       subscriptionItem,
+      blendType: blendType?.blendType,
+      card: {
+        brand: cart?.paymentMethod.brand,
+        last4: cart?.paymentMethod.last4,
+        expiry: cart?.paymentMethod?.expiry,
+      },
     };
+
     dispatch(createUserSubscription(payload));
   };
 
