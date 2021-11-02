@@ -482,3 +482,14 @@ h2 {
   border-radius: 4px;
   padding: 5px;
 }
+
+/* Login screen */
+.register-user {
+  color: white;
+}
+.register-user-other {
+  color: white;
+}
+.register-user-other:hover {
+  color: #999;
+}
