@@ -188,15 +188,6 @@ const updateSubscription = asyncHandler(async (req, res) => {
     req.body.isPause = true;
   }
 
-  if (req.body.billingCycleAnchor === "unpause") {
-    req.body.billingCycleAnchor = "unchanged";
-    req.body.pause_collection = {
-      behavior: "",
-    };
-    req.body.isPause = false;
-  }
-
-  console.log(req.body);
   try {
     const subscription = await stripe.subscriptions.update(req.params.id, {
       items: req.body.items,

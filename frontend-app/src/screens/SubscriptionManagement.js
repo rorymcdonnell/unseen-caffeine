@@ -198,7 +198,7 @@ const SubscriptionManagement = () => {
                   <Button
                     variant="light"
                     className="btn-sm ml-1"
-                    // disabled={item?.isPause}
+                    disabled={item?.isPause}
                     onClick={() => history.push(`/subscription/${item._id}`)}
                   >
                     Update

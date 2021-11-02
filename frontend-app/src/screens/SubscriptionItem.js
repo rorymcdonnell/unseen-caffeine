@@ -53,9 +53,9 @@ const SubscriptionItem = () => {
         subscription?.subscriptionItem?.stripeSubscription?.metadata?.blendType
       );
     }
-    // if (subscription?.isPause) {
-    //   window.location = "/profile/my-subscriptions";
-    // }
+    if (subscription?.isPause) {
+      window.location = "/profile/my-subscriptions";
+    }
   }, [subscription]);
 
   if (loading) {
@@ -148,27 +148,15 @@ const SubscriptionItem = () => {
             <p className="col-text">Put on hold</p>
           </Col>
           <Col className="d-flex justify-content-center  sub-management-col">
-            {subscription?.isPause ? (
-              <button
-                style={{ background: updating && "#333" }}
-                className="gold-sub-btn"
-                disabled={updating}
-                onClick={() => toggleModal("unpause")}
-                // onClick={() => handleSubmit("pause")}
-              >
-                UNPAUSE
-              </button>
-            ) : (
-              <button
-                style={{ background: updating && "#333" }}
-                className="gold-sub-btn"
-                disabled={updating}
-                onClick={() => toggleModal("pause")}
-                // onClick={() => handleSubmit("pause")}
-              >
-                PAUSE IT
-              </button>
-            )}
+            <button
+              style={{ background: updating && "#333" }}
+              className="gold-sub-btn"
+              disabled={updating}
+              onClick={() => toggleModal("pause")}
+              // onClick={() => handleSubmit("pause")}
+            >
+              PAUSE IT
+            </button>
           </Col>
           <Col className="sub-management-col"></Col>
         </Row>
