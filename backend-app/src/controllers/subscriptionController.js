@@ -188,6 +188,15 @@ const updateSubscription = asyncHandler(async (req, res) => {
     req.body.isPause = true;
   }
 
+  if (req.body.billingCycleAnchor === "skip") {
+    req.body.billingCycleAnchor = "unchanged";
+    req.body.pause_collection = {
+      behavior: "mark_uncollectible",
+      resumes_at: req.body.resume_at,
+    };
+    req.body.isSkip = true;
+  }
+
   try {
     const subscription = await stripe.subscriptions.update(req.params.id, {
       items: req.body.items,
@@ -199,6 +208,7 @@ const updateSubscription = asyncHandler(async (req, res) => {
       let sub = await Subscription.findById(req.body.id);
       sub.subscriptionItem.stripeSubscription = subscription;
       sub.isPause = req.body.isPause || false;
+      sub.isSkip = req.body.isSkip || false;
       await sub.save();
       res.json({
         message: "Subscription Updated Successfully",

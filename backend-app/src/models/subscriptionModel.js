@@ -74,6 +74,11 @@ const subscriptionSchema = mongoose.Schema(
       required: false,
       default: false,
     },
+    isSkip: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
 
     subscriptionItem: {
       stripeProductName: { type: String, required: true },

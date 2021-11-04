@@ -136,6 +136,14 @@ export const updateUserSubscriptionReducer = (state = initialState, action) => {
       };
     case UPDATE_USER_SUBSCRIPTION_FAILED:
       return { ...state, updating: false, error: action.payload };
+    case SUBSCRIPTION_CREATE_RESET:
+      return {
+        ...state,
+        updating: false,
+        sending: false,
+        pausing: false,
+        updateSuccessMessage: "",
+      };
     default:
       return state;
   }

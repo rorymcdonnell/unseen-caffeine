@@ -9,6 +9,7 @@ import {
 import { Button, Row, Col } from "react-bootstrap";
 import "../subscription.css";
 import ConfirmationModal from "../components/ConfirmationModal";
+import { SUBSCRIPTION_CREATE_RESET } from "../constants/subscriptionConstants";
 
 const blendTypes = [
   { id: 1, name: "Espresso" },
@@ -56,6 +57,9 @@ const SubscriptionItem = () => {
     if (subscription?.isPause) {
       window.location = "/profile/my-subscriptions";
     }
+    if (updateSuccessMessage) {
+      dispatch({ type: SUBSCRIPTION_CREATE_RESET });
+    }
   }, [subscription]);
 
   if (loading) {
@@ -82,7 +86,10 @@ const SubscriptionItem = () => {
       billingCycleAnchor: billingCycle, // this value should be 'now' or 'unchanged'
       items,
     };
-    console.log(payload);
+    if (billingAnchor === "skip") {
+      payload.resume_at =
+        subscription?.subscriptionItem?.stripeSubscription?.current_period_end;
+    }
     dispatch(
       updateUserSubscription(
         subscription?.subscriptionItem?.stripeSubscription?.id,
@@ -165,7 +172,15 @@ const SubscriptionItem = () => {
             <p className="col-text">Skip delivery</p>
           </Col>
           <Col className="d-flex justify-content-center  sub-management-col">
-            <button className="gold-sub-btn">SKIP IT</button>
+            <button
+              className="gold-sub-btn"
+              style={{ background: updating && "#333" }}
+              className="gold-sub-btn"
+              disabled={updating || subscription?.isSkip}
+              onClick={() => toggleModal("skip")}
+            >
+              {subscription?.isSkip ? "SKIPPED" : "SKIP IT"}
+            </button>
           </Col>
           <Col className="sub-management-col"></Col>
         </Row>
