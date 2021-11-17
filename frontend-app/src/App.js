@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/hoc/PrivateRoute";
 import { routesList } from "./routes/routesList";
+import PageNotFound from "./screens/PageNotFound";
 
 const routeTypes = { public: "public", private: "private" };
 
@@ -14,25 +15,24 @@ const App = () => {
       <Header />
       <main className="py-3">
         <Container>
-          {routesList?.map((route, index) =>
-            route?.routeType === routeTypes.public ? (
-              <Switch>
+          <Switch>
+            {routesList?.map((route, index) =>
+              route?.routeType === routeTypes.public ? (
                 <Route
                   exact={true}
                   path={route.path}
                   component={route.component}
                 />
-              </Switch>
-            ) : (
-              <Switch>
+              ) : (
                 <PrivateRoute
                   exact={true}
                   path={route.path}
                   component={route.component}
                 />
-              </Switch>
-            )
-          )}
+              )
+            )}
+            <Route component={PageNotFound} />
+          </Switch>
         </Container>
       </main>
       <Footer />

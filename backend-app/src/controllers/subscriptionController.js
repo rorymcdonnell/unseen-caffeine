@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import Stripe from "stripe";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 import Subscription from "../models/subscriptionModel.js";
 import User from "../models/userModel.js";
 
@@ -87,6 +88,49 @@ const createUserSubscription = asyncHandler(async (req, res) => {
           subscriptionItem,
         });
         const createdOrder = await order.save();
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 587,
+          auth: {
+            user: process.env.HOST_EMAIL, // generated ethereal user
+            pass: process.env.HOST_EMAIL_PASSWORD, // generated ethereal password
+          },
+        });
+        const mailOptions = {
+          from: "unseencaffeinedev@gmail.com",
+          to: "unseencaffeineorders@gmail.com",
+          subject: "New Order Received",
+          html: `
+            <body>
+              <h3>A new order has been received with the following details.</h3>
+              <ul>
+                <li><strong>Order ID</strong>: ${order._id}</li>
+                <li><strong>Product</strong>: ${
+                  subscriptionItem.stripeProductName
+                }</li>
+                <li><strong>Blend Type</strong>: ${
+                  subscription?.metadata?.blendType
+                }</li>
+                <li><strong>Quantity</strong>: ${subscription?.quantity}</li>
+                <li><strong>Price</strong>: £${subscription?.plan?.amount / 100}
+              </ul>
+            </body>
+          `,
+          // text:
+          //   "A new order has been received with the following details.\n\n" +
+          //   "Order ID => " +
+          //   order._id +
+          //   "\n\n" +
+          //   "Product Name => " +
+          //   subscriptionItem.stripeProductName +
+          //   "\n\n" +
+          //   "Price => £" +
+          //   subscription?.plan?.amount / 100 +
+          //   "\n\n" +
+          //   "\n\n",
+        };
+        // send mail with defined transport object
+        await transporter.sendMail(mailOptions);
         let user = await User.findById(req.user._id);
         user.subscriptions.push({
           stripeSubscriptionId: subscription.id,
@@ -124,6 +168,37 @@ const createUserSubscription = asyncHandler(async (req, res) => {
             subscriptionItem,
           });
           await order.save();
+          const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            auth: {
+              user: process.env.HOST_EMAIL, // generated ethereal user
+              pass: process.env.HOST_EMAIL_PASSWORD, // generated ethereal password
+            },
+          });
+          const mailOptions = {
+            from: "unseencaffeinedev@gmail.com",
+            to: "unseencaffeineorders@gmail.com",
+            subject: "New Order Received",
+            html: `
+            <body>
+              <h3>A new order has been received with the following details.</h3>
+              <ul>
+                <li><strong>Order ID</strong>: ${order._id}</li>
+                <li><strong>Product</strong>: ${
+                  subscriptionItem.stripeProductName
+                }</li>
+                <li><strong>Blend Type</strong>: ${
+                  subscription?.metadata?.blendType
+                }</li>
+                <li><strong>Quantity</strong>: ${subscription?.quantity}</li>
+                <li><strong>Price</strong>: £${subscription?.plan?.amount / 100}
+              </ul>
+            </body>
+          `,
+          };
+          // send mail with defined transport object
+          await transporter.sendMail(mailOptions);
           let user = await User.findById(req.user._id);
           user.subscriptions.push({
             stripeSubscriptionId: subscription.id,

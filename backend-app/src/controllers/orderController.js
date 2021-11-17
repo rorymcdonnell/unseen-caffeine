@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import dotenv from "dotenv";
+import nodemailer from "nodemailer";
 import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
@@ -53,6 +54,42 @@ const addOrderItems = asyncHandler(async (req, res) => {
             paidAt: Date.now(),
           });
           const createdOrder = await order.save();
+          const transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            auth: {
+              user: process.env.HOST_EMAIL, // generated ethereal user
+              pass: process.env.HOST_EMAIL_PASSWORD, // generated ethereal password
+            },
+          });
+          const mailOptions = {
+            from: "unseencaffeinedev@gmail.com",
+            to: "unseencaffeineorders@gmail.com",
+            subject: "New Order Received",
+            html: `
+            <body>
+              <h3>A new order has been received with the following details.</h3>
+              <ul>
+              <li><strong>Order ID</strong>: ${order._id}</li>
+              ${orderItems?.map(
+                (item) =>
+                  ` 
+                <li><strong>Product</strong>: ${item.name}</li>
+                <li><strong>Quantity</strong>: ${item.qty}</li>
+                <li><strong>Price</strong>: £${item.price}                
+                `
+              )}
+
+              </ul>
+            </body>
+          `,
+            // text:
+            //   "A new order has been received with the following ID.\n\n" +
+            //   "Order ID => " +
+            //   order._id +
+            //   "\n\n",
+          };
+          await transporter.sendMail(mailOptions);
           res.status(201).json(createdOrder);
         }
       }
@@ -90,6 +127,43 @@ const addOrderItems = asyncHandler(async (req, res) => {
                 paidAt: Date.now(),
               });
               const createdOrder = await order.save();
+              const transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                auth: {
+                  user: process.env.HOST_EMAIL, // generated ethereal user
+                  pass: process.env.HOST_EMAIL_PASSWORD, // generated ethereal password
+                },
+              });
+              const mailOptions = {
+                from: "unseencaffeinedev@gmail.com",
+                to: "unseencaffeineorders@gmail.com",
+                subject: "New Order Received",
+                html: `
+            <body>
+              <h3>A new order has been received with the following details.</h3>
+              <ul>
+              <li><strong>Order ID</strong>: ${order._id}</li>
+              ${orderItems?.map(
+                (item) =>
+                  ` 
+                <li><strong>Product</strong>: ${item.name}</li>
+                <li><strong>Quantity</strong>: ${item.qty}</li>
+                <li><strong>Price</strong>: £${item.price}                
+                `
+              )}
+
+              </ul>
+            </body>
+          `,
+                // text:
+                //   "A new order has been received with the following ID.\n\n" +
+                //   "Order ID => " +
+                //   order._id +
+                //   "\n\n",
+              };
+              // send mail with defined transport object
+              await transporter.sendMail(mailOptions);
               if (isSaveForLater) {
                 let user = await User.findById(req.user._id);
                 const userCardDetails = {
