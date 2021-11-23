@@ -98,7 +98,7 @@ const createUserSubscription = asyncHandler(async (req, res) => {
         });
         const mailOptions = {
           from: "unseencaffeinedev@gmail.com",
-          to: "unseencaffeineorders@gmail.com",
+          to: ["unseencaffeineorders@gmail.com", req?.user?.email],
           subject: "New Order Received",
           html: `
             <body>
@@ -111,23 +111,30 @@ const createUserSubscription = asyncHandler(async (req, res) => {
                 <li><strong>Blend Type</strong>: ${
                   subscription?.metadata?.blendType
                 }</li>
+                <li><strong>Weight</strong>: ${
+                  subscription?.plan?.nickname
+                }</li>
                 <li><strong>Quantity</strong>: ${subscription?.quantity}</li>
-                <li><strong>Price</strong>: £${subscription?.plan?.amount / 100}
+                <li><strong>Price</strong>: £${
+                  subscription?.plan?.amount / 100
+                }</li>
+                <li><strong>Shipping Address</strong>:
+                  <ul>
+                    <li><strong>City</strong>: ${shippingAddress?.city}</li>
+                    <li><strong>Country</strong>: ${
+                      shippingAddress?.country
+                    }</li>
+                    <li><strong>Postal Code</strong>: ${
+                      shippingAddress?.postalCode
+                    }</li>
+                    <li><strong>Address</strong>: ${
+                      shippingAddress?.address
+                    }</li>
+                  </ul>
+                </li>
               </ul>
             </body>
           `,
-          // text:
-          //   "A new order has been received with the following details.\n\n" +
-          //   "Order ID => " +
-          //   order._id +
-          //   "\n\n" +
-          //   "Product Name => " +
-          //   subscriptionItem.stripeProductName +
-          //   "\n\n" +
-          //   "Price => £" +
-          //   subscription?.plan?.amount / 100 +
-          //   "\n\n" +
-          //   "\n\n",
         };
         // send mail with defined transport object
         await transporter.sendMail(mailOptions);
@@ -178,7 +185,7 @@ const createUserSubscription = asyncHandler(async (req, res) => {
           });
           const mailOptions = {
             from: "unseencaffeinedev@gmail.com",
-            to: "unseencaffeineorders@gmail.com",
+            to: ["unseencaffeineorders@gmail.com", req?.user?.email],
             subject: "New Order Received",
             html: `
             <body>
@@ -191,8 +198,27 @@ const createUserSubscription = asyncHandler(async (req, res) => {
                 <li><strong>Blend Type</strong>: ${
                   subscription?.metadata?.blendType
                 }</li>
+                <li><strong>Weight</strong>: ${
+                  subscription?.plan?.nickname
+                }</li>
                 <li><strong>Quantity</strong>: ${subscription?.quantity}</li>
-                <li><strong>Price</strong>: £${subscription?.plan?.amount / 100}
+                <li><strong>Price</strong>: £${
+                  subscription?.plan?.amount / 100
+                }</li>
+                <li><strong>Shipping Address</strong>:
+                  <ul>
+                    <li><strong>City</strong>: ${shippingAddress?.city}</li>
+                    <li><strong>Country</strong>: ${
+                      shippingAddress?.country
+                    }</li>
+                    <li><strong>Postal Code</strong>: ${
+                      shippingAddress?.postalCode
+                    }</li>
+                    <li><strong>Address</strong>: ${
+                      shippingAddress?.address
+                    }</li>
+                  </ul>
+                </li>
               </ul>
             </body>
           `,

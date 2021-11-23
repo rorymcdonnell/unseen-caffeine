@@ -64,7 +64,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
           });
           const mailOptions = {
             from: "unseencaffeinedev@gmail.com",
-            to: "unseencaffeineorders@gmail.com",
+            to: ["unseencaffeineorders@gmail.com", req?.user?.email],
             subject: "New Order Received",
             html: `
             <body>
@@ -79,15 +79,19 @@ const addOrderItems = asyncHandler(async (req, res) => {
                 <li><strong>Price</strong>: £${item.price}                
                 `
               )}
-
+              <li><strong>Shipping Address</strong>:
+              <ul>
+                <li><strong>City</strong>: ${shippingAddress?.city}</li>
+                <li><strong>Country</strong>: ${shippingAddress?.country}</li>
+                <li><strong>Postal Code</strong>: ${
+                  shippingAddress?.postalCode
+                }</li>
+                <li><strong>Address</strong>: ${shippingAddress?.address}</li>
+              </ul>
+            </li>
               </ul>
             </body>
           `,
-            // text:
-            //   "A new order has been received with the following ID.\n\n" +
-            //   "Order ID => " +
-            //   order._id +
-            //   "\n\n",
           };
           await transporter.sendMail(mailOptions);
           res.status(201).json(createdOrder);
@@ -137,7 +141,7 @@ const addOrderItems = asyncHandler(async (req, res) => {
               });
               const mailOptions = {
                 from: "unseencaffeinedev@gmail.com",
-                to: "unseencaffeineorders@gmail.com",
+                to: ["unseencaffeineorders@gmail.com", req?.user?.email],
                 subject: "New Order Received",
                 html: `
             <body>
@@ -152,15 +156,23 @@ const addOrderItems = asyncHandler(async (req, res) => {
                 <li><strong>Price</strong>: £${item.price}                
                 `
               )}
-
+              <li><strong>Shipping Address</strong>:
+                  <ul>
+                    <li><strong>City</strong>: ${shippingAddress?.city}</li>
+                    <li><strong>Country</strong>: ${
+                      shippingAddress?.country
+                    }</li>
+                    <li><strong>Postal Code</strong>: ${
+                      shippingAddress?.postalCode
+                    }</li>
+                    <li><strong>Address</strong>: ${
+                      shippingAddress?.address
+                    }</li>
+                  </ul>
+                </li>
               </ul>
             </body>
           `,
-                // text:
-                //   "A new order has been received with the following ID.\n\n" +
-                //   "Order ID => " +
-                //   order._id +
-                //   "\n\n",
               };
               // send mail with defined transport object
               await transporter.sendMail(mailOptions);
