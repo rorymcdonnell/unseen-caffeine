@@ -22,10 +22,10 @@ const ProductCarousel = () => {
   ];
 
   const sortedProductCarousel = products.sort((a, b) => {
-    return order.indexOf(a._id) - order.indexOf(b._id);
+    return order.indexOf(b._id) - order.indexOf(a._id);
   });
 
-  console.log("SORTED?", sortedProductCarousel);
+  console.log("SORTED?", products);
 
   useEffect(() => {
     dispatch(listCarouselProducts());
@@ -51,7 +51,7 @@ const ProductCarousel = () => {
                 {/* <p>
                   Nulla vitae elit libero, a pharetra augue mollis interdum.
                 </p> */}
-                <div style={{ marginTop: "14.5rem" }}>
+                <div className="carousel-rating-head">
                   <Rating className="carousel-rating" value={product.rating} />
                 </div>
                 <div style={{ marginTop: "1.5rem" }}>
