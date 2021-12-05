@@ -15,11 +15,14 @@ import CancelSubscriptionModal from "../components/CancelSubscriptionModal";
 import Loader from "../components/Loader";
 import UpdateSubscriptionModal from "../components/UpdateSubscriptionModal";
 import "../subscription.css";
+import UnpauseModal from "../components/UnPauseModal";
 
 const SubscriptionManagement = () => {
+  const [isUnpauseModalOpen, setIsUnpauseModalOpen] = useState(false);
   const [subscriptionId, setSubscriptionId] = useState({});
   const [subscriptionItems, setSubscriptionItems] = useState([]);
 
+  const [stripeSubscriptionId, setStripeSubscriptionId] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [packSize, setPackSize] = useState("250g");
   const [blendType, setBlendType] = useState("Filter");
@@ -47,6 +50,15 @@ const SubscriptionManagement = () => {
   const handleClose = (subscriptionId, id) => {
     setSubscriptionId({ subscriptionId, id });
     dispatch(openCancelSubscriptionModal(!isShow));
+  };
+
+  const toggleUnpauseModal = (ids) => {
+    if (ids) {
+      setStripeSubscriptionId(ids);
+      setIsUnpauseModalOpen(!isUnpauseModalOpen);
+    } else {
+      setIsUnpauseModalOpen(!isUnpauseModalOpen);
+    }
   };
 
   const toggleUpdateSubscriptionModal = (payload) => {
@@ -188,21 +200,38 @@ const SubscriptionManagement = () => {
                     className="btn-sm"
                     onClick={() =>
                       handleClose(
-                        item?.subscriptionItem?.stripeSubscriptionId,
+                        item?.subscriptionItem?.stripeSubscription.id,
                         item?._id
                       )
                     }
                   >
                     Cancel
                   </Button>
-                  <Button
-                    variant="light"
-                    className="btn-sm ml-1"
-                    disabled={item?.isPause}
-                    onClick={() => history.push(`/subscription/${item._id}`)}
-                  >
-                    Update
-                  </Button>
+                  {item?.isPause ? (
+                    <Button
+                      variant="light"
+                      className="btn-sm ml-1"
+                      // disabled={item?.isPause}
+                      onClick={() =>
+                        toggleUnpauseModal({
+                          id: item?._id,
+                          subscriptionId:
+                            item?.subscriptionItem?.stripeSubscriptionId,
+                        })
+                      }
+                    >
+                      Resume
+                    </Button>
+                  ) : (
+                    <Button
+                      variant="light"
+                      className="btn-sm ml-1"
+                      // disabled={item?.isPause}
+                      onClick={() => history.push(`/subscription/${item._id}`)}
+                    >
+                      Update
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -223,6 +252,14 @@ const SubscriptionManagement = () => {
           isShow={isUpdateSubscriptionModalOpen}
           handleClose={toggleUpdateSubscriptionModal}
           updateSuccessMessage={updateSuccessMessage}
+        />
+
+        <UnpauseModal
+          loading={updating}
+          isShow={isUnpauseModalOpen}
+          handleClose={toggleUnpauseModal}
+          message={updateSuccessMessage}
+          subscriptionIds={stripeSubscriptionId}
         />
       </Container>
     </div>

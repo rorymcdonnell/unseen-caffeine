@@ -298,6 +298,16 @@ const updateSubscription = asyncHandler(async (req, res) => {
     req.body.isSkip = true;
   }
 
+  if (req.body.billingCycleAnchor === "void") {
+    req.body.billingCycleAnchor = "unchanged";
+    req.body.pause_collection = {
+      behavior: "void",
+      resumes_at: Date.now(),
+    };
+    req.body.isPause = false;
+    req.body.isSkip = false;
+  }
+
   try {
     const subscription = await stripe.subscriptions.update(req.params.id, {
       items: req.body.items,
