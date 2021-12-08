@@ -48,9 +48,7 @@ const ProductCarousel = () => {
               />
               <Carousel.Caption>
                 <h3 className="text-white">{product.name}</h3>
-                {/* <p>
-                  Nulla vitae elit libero, a pharetra augue mollis interdum.
-                </p> */}
+
                 <div className="carousel-rating-head">
                   <Rating className="carousel-rating" value={product.rating} />
                 </div>
@@ -62,31 +60,6 @@ const ProductCarousel = () => {
           </Carousel.Item>
         ))}
       </Carousel>
-      {/* <div>
-        <Carousel indicatorLabels={labels} className="bg-dark">
-          {products.map((product) => (
-            <Carousel.Item key={product._id}>
-              <Link to={`/product/${product._id}`}>
-                <Image src={product.image} alt={product.name} />
-                <Carousel.Caption className="carousel-caption">
-                  <h2>
-                    {product.name} (£{product.price})
-                  </h2>
-
-                  <Rating
-                    className="carousel-rating"
-                    value={product.rating}
-                  ></Rating>
-                </Carousel.Caption>
-              </Link>
-            </Carousel.Item>
-          ))}
-        </Carousel>
-      </div>
-
-      <div>
-        <p className="carousel-indicator">Medium</p>
-      </div> */}
     </div>
   );
 };

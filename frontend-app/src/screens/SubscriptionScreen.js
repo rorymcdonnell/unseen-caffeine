@@ -87,7 +87,7 @@ const SubscriptionScreen = () => {
                         })
                       }
                     >
-                      £{price?.unit_amount / 100}/{price?.recurring.interval} (
+                      £{price?.unit_amount / 100}/{price?.recurring?.interval} (
                       {price?.nickname})
                     </button>
                   </div>
